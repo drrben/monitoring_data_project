@@ -1,0 +1,7 @@
+Inputs/*.csv
+.pyc
+__pycache__
+*.log
+.idea
+Outputs/Models
+Outputs/Preprocessed
