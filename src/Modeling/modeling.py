@@ -70,6 +70,11 @@ def main_GS_from_estimator_and_params(X_train,y_train, estimator, params_grid, c
                            scoring=make_scorer(f1_score), verbose=1, n_jobs = -1)
     best_model = gsearch.fit(X=X_train, y=y_train)
 
+    means = gsearch.cv_results_['mean_test_score']
+    stds = gsearch.cv_results_['std_test_score']
+    for mean, std, params in zip(means, stds, gsearch.cv_results_['params']):
+        print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+
     return best_model.best_params_, best_model.best_score_
 
 
