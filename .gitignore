@@ -6,3 +6,4 @@ __pycache__
 Outputs/Models
 Outputs/Preprocessed
 src/my_notebook_test.ipynb
+**/*/.ipynb_checkpoints/
