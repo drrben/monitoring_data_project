@@ -26,6 +26,22 @@ def levene_test(data_1, data_2):
     _, pvalue = stats.levene(data_1, data_2)
     return pvalue >= 0.05
 
+def check_set_columns (data_1, data_2):
+    if set(data_1.columns) == set(data_2.columns):
+        err_msg = "\t ->Format check_set_columns: OK,"
+    else :
+        err_msg = "\t ->Format check_set_columns: NOT OK, the new batch do not have the same columns"
+    print(err_msg)
+    return not(set(data_1.columns) == set(data_2.columns))
+
+def check_nb_nan (data_1, data_2):
+    percent_missing_1 = data_1.isnull().sum() * 100 / len(data_1)
+    percent_missing_2 = data_2.isnull().sum() * 100 / len(data_2)
+    if (percent_missing_1+percent_missing_2==0):
+        return False
+    diff_in_percent = abs(percent_missing_1 - percent_missing_2) / (percent_missing_1+percent_missing_2)
+    return diff_in_percent> 0.01
+
 
 def apply_test(df, batch, test):
     int_col = u.get_numerical_columns(df)
@@ -41,6 +57,7 @@ def apply_test(df, batch, test):
     return results
 
 def main_monitoring(df,batches):
+
     count=1
     for batch in batches:
         print("batch %d" %count)
@@ -49,7 +66,9 @@ def main_monitoring(df,batches):
         print("**************************************** \n")
 
 def main_monitoring_batch(df,batch):
-    drift_tests = ["kolmogorov_smirnov", "t_test", "levene_test"]
-    for test in drift_tests:
+    check_set_columns(df,batch)
+    tests = ["check_nb_nan","kolmogorov_smirnov", "t_test", "levene_test"]
+    for test in tests:
         function_test= globals()[test]
         apply_test(df, batch, function_test)
+
