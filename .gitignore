@@ -3,7 +3,7 @@ Inputs/*.csv
 __pycache__
 *.log
 .idea
-Outputs/Models
-Outputs/Preprocessed
+Outputs/
 src/my_notebook_test.ipynb
 **/*/.ipynb_checkpoints/
+*.sav
