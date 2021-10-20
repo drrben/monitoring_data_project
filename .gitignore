@@ -1,5 +1,8 @@
-
+Inputs/*.csv
 .pyc
 __pycache__
 *.log
 .idea
+Outputs/Models
+Outputs/Preprocessed
+src/my_notebook_test.ipynb
