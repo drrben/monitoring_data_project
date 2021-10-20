@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import logging
-logger = logging.getLogger('main_logger')
-from sklearn.model_selection import KFold, GridSearchCV
-from sklearn.metrics import make_scorer, f1_score, fbeta_score
 
+from scipy.stats import loguniform
+
+logger = logging.getLogger('main_logger')
 import lightgbm as lgb
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score, fbeta_score, make_scorer
+from sklearn.model_selection import GridSearchCV, KFold
 
 # What can be done in this script: (not mandatory)
 # Implementing a cross validation (function) to check the robustness of a parameter set
@@ -16,7 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 
-def main_modeling_from_name (X_train,y_train, conf):
+def main_modeling_from_name(X_train,y_train, conf):
     """
     Main modeling function: it launches a grid search using the correct model according to the conf file
     Args:
@@ -28,10 +30,16 @@ def main_modeling_from_name (X_train,y_train, conf):
 
     """
 
-    dict_function_GS_params = {'random_forest': 'get_GS_params_RFClassifier',
-                                'lightgbm': 'get_GS_params_lightgbm'}
-    dict_function_train_model = {'random_forest': 'train_RFClassifier',
-                                'lightgbm': 'train_lightgbm'}
+    dict_function_GS_params = {
+        'random_forest': 'get_GS_params_RFClassifier',
+        'lightgbm': 'get_GS_params_lightgbm',
+        'logistic_regression': 'get_GS_params_LRClassifier',
+    }
+    dict_function_train_model = {
+        'random_forest': 'train_RFClassifier',
+        'lightgbm': 'train_lightgbm',
+        'logistic_regression': 'train_LRClassifier',
+    }
 
     selected_model = conf['selected_model']
     function_get_GS_params = globals()[dict_function_GS_params[selected_model]]
@@ -143,3 +151,34 @@ def train_RFClassifier(X_train,y_train,params):
     """
     model = RandomForestClassifier(**params).fit(X_train,y_train)
     return model
+
+####### LOGISTIC REGRESSION  ########
+def get_GS_params_LRClassifier():
+    """
+    Gives params and models to use for the grid_search using a Logistic Regression
+    Returns:Estimator and params for the grid_search
+    """
+    params_grid = {
+        "solver": ["liblinear"],
+        'penalty': ['l1', 'l2'],
+        'C': [0.001, .009, 0.01, .09, 1, 5, 10, 25]
+    }
+
+    estimator = LogisticRegression()
+
+    return estimator, params_grid
+
+def train_LRClassifier(X_train,y_train,params):
+    """
+    Training function for a a Logistic Regression
+    Args:
+        X_train: 
+        y_train: 
+        params: params to use for the fitting
+
+    Returns: trained random forest model
+
+    """
+    model = LogisticRegression(**params).fit(X_train,y_train)
+    return model
+
