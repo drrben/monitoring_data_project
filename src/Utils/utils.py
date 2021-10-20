@@ -65,3 +65,7 @@ def load_model(conf,name=""):
 def get_y_column_from_conf(conf):
 
     return conf["dict_info_files"][conf['selected_dataset']]["y_name"]
+
+def get_numerical_columns(df):
+    cols=[col for col in df.columns if not ("Accepted" in col or "Dt" in col or "Education" in col or "Marital_Status" in col or "Country" in col)]
+    return cols

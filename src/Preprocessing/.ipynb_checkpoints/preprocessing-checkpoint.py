@@ -315,7 +315,6 @@ def preprocessing_for_marketing_dataset(df, conf):
 
     logger.debug('Cleaning ')
     #Cleaning Income
-
     df[' Income '] = df[' Income '].str.replace('$', '')
     df[' Income '] = df[' Income '].str.replace(',', '')
     df[' Income '] = df[' Income '].str.replace(' ', '')
@@ -330,13 +329,12 @@ def preprocessing_for_marketing_dataset(df, conf):
 
     logger.debug('One hot Encoding')
     # one hot encoding
-    df = df[df['Marital_Status'] != "YOLO"]
     cols = ['Education','Marital_Status','Country' ]
     df = one_hot_encoder(df, cols)
 
     logger.debug('Dropping unique columns')
     # Drop id:
-    df_preprocessed = df.drop(['ID','Dt_Customer','Unnamed: 0'], axis=1)
+    df_preprocessed = df.drop(['ID','Dt_Customer'], axis=1)
 
     logger.debug('Selection of X and Y')
     # returning columns for train test split

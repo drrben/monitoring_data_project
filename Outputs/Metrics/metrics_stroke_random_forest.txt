@@ -1,0 +1,1 @@
+"{'f1_score': 0.0, 'accuracy': 0.9374021909233177, 'recall': 0.0, 'precision': 0.0, 'confusion_matrix': {'tn': 1198, 'fp': 0, 'fn': 80, 'tp': 0}}"

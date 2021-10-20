@@ -12,7 +12,6 @@
 
 "__comments_on_selections__":"You can choose the dataset of your choice and the model you want with the 2 following parameters",
 "selected_dataset": "marketing",
-"monitored_dataset": "marketing_2",
 "selected_model":"random_forest",
 
 
