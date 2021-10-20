@@ -1,0 +1,10 @@
+name: monitoring
+dependencies:
+  - jupyter
+  - ipython
+  - scipy
+  - numpy
+  - pandas
+  - scikit-learn
+  - lightgbm
+  - xgboost
