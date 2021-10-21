@@ -7,10 +7,11 @@ from sklearn.metrics import f1_score, accuracy_score,confusion_matrix
 from sklearn.metrics import recall_score, precision_score
 import numpy as np
 import json
+import csv
 
 #This script can be optimized depending on your needs
 
-def main_evaluation(clf, X_test, y_test, conf):
+def main_evaluation(clf, X_test, y_test, conf,count=0):
     """
     Main Evaluation Function: computes metrics and save them into a json file
     Args:
@@ -36,6 +37,15 @@ def main_evaluation(clf, X_test, y_test, conf):
     with open(conf['paths']['Outputs_path'] + conf['paths']['folder_metrics'] + 'metrics_'
               + conf['selected_dataset'] + "_" + conf['selected_model'] + '.txt', 'w') as outfile:
         json.dump(str(dict_metrics), outfile)
+    mode="w" if (count==0) else "a"
+    header = ["count"]+list(dict_metrics.keys())
+    row=[count]+list(dict_metrics.values())
+    print(row)
+    with open(r'../Outputs/Monitoring/marketing_2_eval.csv', mode=mode) as f:
+        writer = csv.writer(f)
+        if (count==0):
+            writer.writerow(header)
+        writer.writerow(row)
     return dict_metrics
 
 def metric_f1_score( y_true, y_pred, average = 'binary'):

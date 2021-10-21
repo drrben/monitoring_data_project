@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pandas as pd
 from scipy import stats
 import logging
 import utils as u
@@ -18,8 +19,8 @@ def kolmogorov_smirnov(data_1, data_2):
 
 def t_test(data_1, data_2):
     # test whether two columns have the same mean
-    _, pvalue = stats.ttest_ind(data_1, data_2, axis=0, equal_var=False)
-    return pvalue >= 0.05
+    _, pvalue = stats.ttest_ind(data_1, data_2, equal_var=False)
+    return pvalue >= 0.01
 
 def levene_test(data_1, data_2):
     # test whether two columns have the same variance
@@ -74,35 +75,34 @@ def psi(data_1, data_2, buckettype='bins', buckets=10):
 
     psi_value = np.sum(sub_psi(expected_percents[i], actual_percents[i]) for i in range(0, len(expected_percents)))
 
-    return psi_value>0.5
+    return psi_value>0.2
 
 
-def apply_test(df, batch, test):
+def apply_test(df, batch, test,df_monitoring,count):
     int_col = u.get_numerical_columns(df)
-    results = {}
     print("\t ->" + test.__name__ +":")
     for col in int_col:
         data_1 = df.loc[:, col]
         data_2 = batch.loc[:, col]
-        results[col] = test(data_1, data_2)
-        if (results[col]):
+        df_monitoring.loc[len(df_monitoring)]=[count,test.__name__,test(data_1, data_2),col]
+        if (test(data_1, data_2)):
             print("\t \t -"+col)
 
-    return results
 
 def main_monitoring(df,batches):
-
+    df_monitoring=pd.DataFrame(columns=["batch","test","val","col"])
     count=1
     for batch in batches:
         print("batch %d" %count)
-        main_monitoring_batch(df,batch)
+        main_monitoring_batch(df,batch,df_monitoring,count)
         count+=1
         print("**************************************** \n")
+    df_monitoring.to_csv("../Outputs/Monitoring/marketing_2_monitored.csv", sep=";", index=False,)
 
-def main_monitoring_batch(df,batch):
+def main_monitoring_batch(df,batch,df_monitoring,count):
     check_set_columns(df,batch)
     tests = ["check_nb_nan","kolmogorov_smirnov", "t_test", "levene_test","psi"]
     for test in tests:
         function_test= globals()[test]
-        apply_test(df, batch, function_test)
+        apply_test(df, batch, function_test,df_monitoring,count)
 

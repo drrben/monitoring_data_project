@@ -3,7 +3,8 @@
 "Outputs_path":"../Outputs/",
 "folder_preprocessed":"Preprocessed/",
 "folder_models":"Models/",
-"folder_metrics":"Metrics/"
+"folder_metrics":"Metrics/",
+"folder_monitoring":"Monitoring/"
 
 },
 
