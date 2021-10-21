@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+import sys
+sys.path.insert(0, "../Loading/")
 from ..Loading.loading import read_csv_from_path, read_csv_from_path
 logger = logging.getLogger('main_logger')
 import streamlit as st

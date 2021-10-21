@@ -7,7 +7,7 @@ from scipy.stats import loguniform
 logger = logging.getLogger('main_logger')
 import lightgbm as lgb
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, RidgeClassifier
 from sklearn.metrics import f1_score, fbeta_score, make_scorer
 from sklearn.model_selection import GridSearchCV, KFold
 
@@ -34,11 +34,13 @@ def main_modeling_from_name(X_train,y_train, conf):
         'random_forest': 'get_GS_params_RFClassifier',
         'lightgbm': 'get_GS_params_lightgbm',
         'logistic_regression': 'get_GS_params_LRClassifier',
+        'ridge_classifier': 'get_GS_params_RidgeClassifier',
     }
     dict_function_train_model = {
         'random_forest': 'train_RFClassifier',
         'lightgbm': 'train_lightgbm',
         'logistic_regression': 'train_LRClassifier',
+        'ridge_classifier': 'train_RidgeClassifier',
     }
 
     selected_model = conf['selected_model']
@@ -180,5 +182,33 @@ def train_LRClassifier(X_train,y_train,params):
 
     """
     model = LogisticRegression(**params).fit(X_train,y_train)
+    return model
+
+####### RIDGE CLASSIFICATION  ########
+def get_GS_params_RidgeClassifier():
+    """
+    Gives params and models to use for the grid_search using a Ridge Classifier
+    Returns:Estimator and params for the grid_search
+    """
+    params_grid = {
+        "alpha": [1, 10]
+    }
+
+    estimator = RidgeClassifier()
+
+    return estimator, params_grid
+
+def train_RidgeClassifier(X_train,y_train,params):
+    """
+    Training function for a a Ridge Classifier
+    Args:
+        X_train: 
+        y_train: 
+        params: params to use for the fitting
+
+    Returns: trained random forest model
+
+    """
+    model = RidgeClassifier(**params).fit(X_train,y_train)
     return model
 
